@@ -1,16 +1,20 @@
-# Agartha - LFI, RCE, SQLi, Auth, HTTP to JS
+# Agartha
+###### Payload Injection (LFI, RCE, SQLi, with optional BCheck), Auth Issues (Access Matrix, HTTP 403), Copy as JavaScript, and Bambdas
+<hr/>
+
 Agartha, specializes in advance payload generation and access control assessment. It adeptly identifies vulnerabilities related to injection attacks, and authentication/authorization issues. The dynamic payload generator crafts extensive wordlists for various injection vectors, including SQL Injection, Local File Inclusion (LFI), and Remote Code Execution(RCE). Furthermore, the extension constructs a comprehensive user access matrix, revealing potential access violations and privilege escalation paths. It also assists in performing HTTP 403 bypass checks, shedding light on auth misconfigurations. Additionally, it can convert HTTP requests to JavaScript code to help digging up XSS issues more.
 
 In summary:
 
-- **Payload Generator**: It dynamically constructs comprehensive wordlists for injection attacks, incorporating various encoding and escaping characters to enhance the effectiveness of security testing. These wordlists cover critical vulnerabilities such as SQL Injection, Local File Inclusion (LFI), and Remote Code Execution, making them indispensable for robust security testing.
+- **Payload Generator**: It dynamically constructs comprehensive wordlists for injection attacks, incorporating various encoding and escaping characters to enhance the effectiveness of security testing. These wordlists cover critical vulnerabilities such as SQL Injection (SQLi), Local File Inclusion (LFI), Remote Code Execution (RCE), and now also support BCheck syntax for seamless integration with Burp's BCheck framework.
 	- **Local File Inclusion, Path Traversal:** It helps identifying vulnerabilities that allow attackers to access files on the server's filesystem.
 	- **Remote Code Execution, Command Injection:** It aims to detects potential command injection points, enabling robust testing for code execution vulnerabilities.
 	- **SQL Injection:** It assists to uncover SQL Injection vulnerabilities, including Stacked Queries, Boolean-Based, Union-Based, and Time-Based.
 - **Auth Matrix**: By constructing a comprehensive access matrix, the tool reveals potential access violations and privilege escalation paths. This feature enhances security posture by addressing authentication and authorization issues. 
-	- You can use the web **'Spider'** feature to generate a sitemap/URL list, and it will crawl visible links from the user's session automatically.
+	- You can use the web **Spider** feature to generate a sitemap/URL list, and it will crawl visible links from the user's session automatically.
 - **403 Bypass**: It aims to tackle common access restrictions, such as HTTP 403 Forbidden responses. It utilizes techniques like URL manipulation and request header modification to bypass implemented limitations.
-- **Copy as JavaScript**: It converts Http requests to JavaScript code for further XSS exploitation and more.<br/><br/>
+- **Copy as JavaScript**: It converts Http requests to JavaScript code for further XSS exploitation and more.
+- **Bambdas Script Generator**: The feature supports automatic generation of Bambdas-compatible scripts based on user input. It eliminates the need for manual coding, enabling faster creation of custom scripts and streamlining integration with the Bambdas engine.<br/><br/>
 
 Here is a small tutorial how to use.
 
@@ -25,10 +29,14 @@ Or for manual installation:
 - Burp Menu > Extender > Extensions > Add > Extension Type: Python > Extension file(.py): Select 'Agartha.py' file
 
 After all, you will see 'Agartha' tab in the main window and it will be also registered the right click, under: 
-- 'Extensions > Agartha - LFI, RCE, SQLi, Auth, HTTP to JS', with three sub-menus:
+- 'Extensions > Agartha', with three sub-menus:
 	- **'Auth Matrix'**
  	- **'403 Bypass'**
-	- **'Copy as JavaScript'**<br/><br/>
+	- **'Copy as JavaScript'** 
+
+		<img width="600" alt="Agartha Menu" src="https://github.com/user-attachments/assets/95be70fe-184c-4195-9455-8c3930926fcc">
+
+<br/><br/>
 
 
 ## Local File Inclusion / Path Traversal
@@ -37,8 +45,6 @@ It supports both Unix and Windows file syntaxes, enabling dynamic wordlist gener
 - **'Waf Bypass'** inquires whether you want to enable all bypass features, such as the use of null bytes, various encoding techniques, and other methods to circumvent web application firewalls.
 
 <img width="1000" alt="Directory Traversal/Local File Inclusion wordlist" src="https://github.com/volkandindar/agartha/assets/50321735/b457e6c2-0829-4959-84aa-9116886b99f7"><br/><br/>
-
-
 
 ## Remote Code Execution / Command Injection
 It generates dynamic wordlists for command execution based on the supplied command. It combines various separators and terminators for both Unix and Windows environments.
@@ -55,6 +61,33 @@ It generates payloads for various types of SQL injection attacks, including Stac
 
 <img width="1000" alt="SQL Injection wordlist" src="https://github.com/volkandindar/agartha/assets/50321735/51a010b6-4d9a-4dc9-a634-b353f6b30b95"><br/><br/>
 
+## BCheck Code Generator
+BCheck is Burp Suite's framework for creating and importing custom scan checks. These user-defined checks run alongside Burp Scanner’s built-in routines, allowing you to tailor scans to specific vulnerabilities or testing needs. By using BChecks, you can extend Burp’s scanning capabilities and streamline your workflow for more targeted and efficient assessments.
+Now you can generate the code automatically:
+
+<img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/a614dc20-dfce-4449-ba47-7762158da6db">
+
+- You can click the “**Generate the Payloads**” button in the blue box above to create a classic wordlist, which can be used manually in Burp's Intruder or Repeater.
+- Now, you also have the option to click the “**Generate payloads for BCheck**” button in the red box to generate the same payloads formatted in BCheck syntax, ready to be used in scans.
+
+Please be aware that as the Bambdas script increases in size, it may cause performance issues, particularly during scanning. Larger scripts can slow down responsiveness, increase memory usage, and lead to delays in executing tasks.
+
+<img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/c38b5816-2a24-4f13-b3f3-a7c62b3ca236">
+
+After clicking the "Generate payloads for BCheck" button, the BCheck code will be automatically copied to your clipboard.
+
+Next, go to 'Extensions > BChecks > New > Blank' from the Burp Suite menu, and simply paste the generated code.
+
+Your payloads are now integrated into a BCheck. You can either manually send or scan HTTP requests, or initiate a Burp scan that incorporates BCheck controls to automatically test the injection payloads generated by the tool.
+- **Manual scanning**: Right-click an HTTP request and select "Send to BChecks Editor". Then click the generated BCheck item and select "Run test".
+- **Automatic scanning**: Right-click an HTTP request, choose 'Open Scan Launcher', then go to 'Scan configuration > Select from library > Audit checks – BChecks only'. Close the dialog, and your scan will now run exclusively with the BChecks you have defined.
+
+<img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/0ff1ecf5-1a84-444b-bc6e-7e2d7153dc5d">
+
+**Fine-tuning advises**: The generated code serves as a template and may require some adjustments, as behavior can vary between different applications and servers.
+
+Refining filters—such as specifying HTTP response codes or keywords within responses—can help reduce false positives and make the results more precise and less noisy.<br/><br/>
+
 ## Authorization Matrix / User Access Table
 This part focuses on analyzing user session and URL relationships to identify access violations. The tool systematically visits all URLs associated with pre-defined user sessions and populates a table with HTTP responses. Essentially, it creates an access matrix, which aids in identifying authentication and authorization issues. Ultimately, this process reveals which users can access specific page contents.
 - You can right-click on any request and navigate to 'Extensions > Agartha > Auth Matrix' to define **user sessions**.
@@ -63,7 +96,6 @@ This part focuses on analyzing user session and URL relationships to identify ac
 - Now, it's ready for execution. Simply click the **'Run'** button, and the table will be populated accordingly.
 
 <img width="1000" alt="Authorization Matrix" src="https://github.com/volkandindar/agartha/assets/50321735/6f89e22c-e29c-413d-96d8-c2a8d7ac39d4">
-
 
 A little bit more details:
 1. This is the field where you enter the username for the session you provide. You can add up to four different users, with each user being assigned a unique color to enhance readability.
@@ -84,7 +116,7 @@ A little bit more details:
 
 Please note that potential session terminators (such as logoff, sign-out, etc.) and specific file types (such as CSS, images, JavaScript, etc.) will be filtered out from both the 'Spider' and the user's URL list.
 
-<img width="1000" alt="User Access Table Details" src="https://github.com/volkandindar/agartha/assets/50321735/e7ce918e-d40e-44c5-ada7-ee1c0cfa487b">
+<img width="1000" alt="User Access Table Details" src="https://github.com/user-attachments/assets/addabcc7-7dab-482b-91aa-4856b9e16126">
 
 After clicking 'RUN', the tool will populate the user and URL matrix with different colors. In addition to user-specific colors, you will see red, orange, and yellow cells indicating possible access issues.
 - **Red** highlights a critical access violation, indicated by the response returning 'HTTP 200' with the same content length.
@@ -117,9 +149,13 @@ Simply clicking the 'RUN' button will execute the task.
 
 The figure below illustrates that a URL may have an access issue, with the ‘Red’ color indicating a warning.
 
-<img width="1000" alt="Attempt details" src="https://github.com/volkandindar/agartha/assets/50321735/b7c81258-aa11-42dc-87c6-c25b1047056c">
+<img width="1000" alt="Attempt details" src="https://github.com/user-attachments/assets/37fd6e3f-2348-48ce-a323-d7294a7a424b">
 
 1. Load requests from the proxy history by selecting the target hostname and clicking the ‘Load Requests’ button.
+ 	- **Enable Filters**: Since processing all URLs in the HTTP history is a bulk task, this section provides options to apply matching criteria.
+ 	 	- The Enable URL grouping feature (experimental) aims to eliminate similar endpoints that differ only by unique IDs, counting them as a single entry.
+ 	 	- You can choose to load only URLs from the past n days.
+ 	 	- You can also specify certain keywords to control which URLs are loaded, for example: /admin/, user
 2. URL and Header details
 3. Request attempts and results
 4. HTTP requests and responses
@@ -136,36 +172,98 @@ To use this feature, simply right-click on any HTTP request and select 'Extensio
 
 It will automatically save to your clipboard, including some additional remarks for your reference. For example:
 ```
-Http request with minimum header paramaters in JavaScript:
-	<script>
-		var xhr=new XMLHttpRequest();
-		xhr.open('GET','http://dvwa.local/vulnerabilities/xss_r/?name=XSS');
-		xhr.withCredentials=true;
-		xhr.send();
-	</script>
+Http request with minimal parameters:
+<script>
+fetch('http://dvwa.local/vulnerabilities/xss_r/?name=XSS',{method:'GET',credentials:'include'});
+</script>
 
-Http request with all header paramaters (except cookies, tokens, etc) in JavaScript, you may need to remove unnecessary fields:
-	<script>
-		var xhr=new XMLHttpRequest();
-		xhr.open('GET','http://dvwa.local/vulnerabilities/xss_r/?name=XSS');
-		xhr.withCredentials=true;
-		xhr.setRequestHeader('Host',' dvwa.local');
-		xhr.setRequestHeader('User-Agent',' Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:127.0) Gecko/20100101 Firefox/127.0');
-		xhr.setRequestHeader('Accept',' text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8');
-		xhr.setRequestHeader('Accept-Language',' en-US,en;q=0.5');
-		xhr.setRequestHeader('Accept-Encoding',' gzip, deflate, br');
-		xhr.setRequestHeader('DNT',' 1');
-		xhr.setRequestHeader('Sec-GPC',' 1');
-		xhr.setRequestHeader('Connection',' keep-alive');
-		xhr.setRequestHeader('Referer',' http://dvwa.local/vulnerabilities/xss_r/');
-		xhr.setRequestHeader('Upgrade-Insecure-Requests',' 1');
-		xhr.setRequestHeader('Priority',' u=1');
-		xhr.send();
-	</script>
-
-For redirection, please also add this code before '</script>' tag:
-	xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader('Location');return ajax.call(this,location);}};
+Http request with header fields:
+<script>
+fetch('http://dvwa.local/vulnerabilities/xss_r/?name=XSS',{method:'GET',credentials:'include',headers:{'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8','Sec-GPC':'1','Accept-Language':'en-US,en;q=0.5'}});
+</script>
 ```
 Please note that the JavaScript code will execute within the original user session, with many header fields automatically populated by the browser. However, in some cases, the server may require specific mandatory header fields. For example, certain requests might fail if the 'Content-Type' is incorrect. Therefore, you may need to adjust the code to ensure compatibility with the server's requirements.
 <br/><br/>
+
+## Bambdas Code Generator
+Bambdas are lightweight scripts that run directly within Burp Suite, allowing users to quickly customize and automate various tasks. They can be used to define custom match-and-replace rules, add dynamic table columns, apply filters, and tailor the interface to better suit specific testing workflows. 
+
+<img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/6a0d9214-75e5-476c-89c1-21d82adcc463">
+
+Explanations, A little bit more details:
+1. Regarding script creation GUI, you can select general settings here. For example:
+ 	- Processing only in-scope addresses or all domain addresses.
+ 	- Hiding specific file extensions or not.
+ 	- Colors for URLs defined in the scope section, located in the first part of Group 3.
+   	- Colors for URLs that have already been tested, located in the second part of Group 3.
+   	- Colors for filters defined mostly in Group 2.
+   	- Number of past days to display.
+ 	- Number of past days to be processed by the script.
+2. The options in the second section are mainly related to processing HTTP requests and responses:
+ 	- Provides options to specify whether the search criteria should be applied to the URL, the request, or the response. Selecting any of these will activate the corresponding options below. For example, if you want to search for 'Vulnerable JavaScript Functions', this will only be possible in HTTP responses.
+ 	- Option to hide specific HTTP methods.
+ 	- "Search HTML comments", "Downloadable file extensions", and "Vulnerable JS Functions" are generally searched within HTTP responses.
+ 	- "Valuable keywords" searches can be applied to URLs, requests, and responses.
+   	- "SQLi-suspect identifiers, XSS-suspect identifiers, LFI-suspect identifiers, SSRF-suspect identifiers, Open Redirect-suspect identifiers, and RCE-suspect identifiers" can be searched in URLs or requests. Unlike "Valuable keywords", which searches free-text, these options detect parameters specifically.
+3. The options in the third section are mainly for defining scope, already tested URLs, and URLs you want to hide.
+ 	- You can define the URLs to be tested in the "Definition of testing scope" section. If you enter /, the entire application will be considered in scope; if you add a specific path like /users, only that directory and its contents will be in scope. The "Color for testing scope" option applies to this section.
+   	- The "Already Tested URLs" section contains the list of URLs that have already been tested. The "Color for tested items" option applies here.
+ 	- The "Black-Listed URLs" section contains URLs you wish to hide from the proxy history.
+
+    **Examples of definitions**: 
+    - /
+ 	    - Root path — includes everything.  
+   			Note: In addition to the testing and tested scope definitions, it can also be applied in the Black-Listed URLs section, where it excludes everything unless a matching criterion is defined.
+    - /portal/users
+ 	    - Includes specifically this path and its subpaths, for example:
+ 	 	    - /portal/users?id=1
+ 	 	    - /portal/users/?id=1
+ 	 	    - /portal/users/dashboard
+    - /admin/\*/users/\*/class
+     	- The asterisk (*) acts as a placeholder for IDs, UUIDs, etc., and the rest of the path will be included.
+    - /api/v\*/user
+     	- The asterisk (*) acts as a wildcard that matches any sequence of characters following **v**, up to the next '/', for example:
+ 	 	    - /api/v1/user
+ 	 	    - /api/v2/user
+    - /health-check
+ 	    - Includes specifically this path and its subpaths, for example:
+ 	 	    - /health-check
+ 	 	    - /health-check/Monitor
+ 	 	    - /health-check/?Level=Info
+4. Finally, the fourth section is where the script generated by clicking the "Run" button is displayed, and the script is now ready for use. In general, this script can be added in two different ways:
+ 	- Temporary (project-based): From the application menu, go to Proxy > HTTP History > Bambda Mode > Apply & Close.
+   	- Permanent (application-wide): From the application menu, go to Extensions > Bambda Library > New > Blank > View filter + HTTP history > Save & Close.
+ 	
+
+**Please note**: Enabling all options, especially for large projects, can result in significant system resource usage and increased processing time. If the script you have created does not complete within a reasonable time, it may be beneficial to revise it.
+
+<img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/2e13f4e2-46ea-4970-b403-95bc03aeb8b1">
+
+**Option precedence**: The highest priority is 'Color for tested items', followed by 'Color for testing scope', and finally 'Color for parameters/keywords'.
+
+The figure above illustrates the following:
+- **Pink** indicates the testing scope (the first part of group 3).
+- **Yellow** represents the tested scope (the second part of group 3).
+- **Cyan** highlights matches for the search criteria (Group 2). In addition, you can see which criterion matched in the 'Notes' section of each HTTP call.
+
+If you later update or modify a script that has already been created, there are a few important points to keep in mind:
+- If you set your script as Permanent (application-wide), you will need to reload it by following these steps:
+
+		Bambda Script mode > Load
+  
+  <img width="800" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/003a2d6c-8122-4521-a58a-de6402e0fb74">
+
+- If you use your script as Temporary (project-based), you generally have two options:
+ 	1. If you want the modified script to be active from that point onward, no additional steps are required—simply click Apply.
+ 	2. If you want the modified script to process the entire proxy history, you must either re-enable Bambda Mode, or toggle the boolean resetScreen parameter inside the script:
+		```
+		// 'true' clears colors/notes
+		// 'false' executes the script  
+		boolean resetScreen = false; // or true
+		
+		```
+		<img width="800" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/e30fec8d-a78d-4328-84b4-6fd1ee29f8f3">
+
+<br/><br/>
 [Another tutorial link](https://www.linkedin.com/pulse/agartha-lfi-rce-auth-sqli-http-js-volkan-dindar)
+
