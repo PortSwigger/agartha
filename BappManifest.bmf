@@ -3,7 +3,7 @@ ExtensionType: 2
 Name: Agartha
 RepoName: agartha
 ScreenVersion: 3.0.0
-SerialVersion: 6
+SerialVersion: 7
 MinPlatformVersion: 2
 ProOnly: False
 Author: Volkan Dindar
